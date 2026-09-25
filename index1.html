@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Management Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{background:#f3f6fa;color:#1f2937;min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.login-page{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#0f172a,#1d4ed8);padding:20px}
+.login-card{width:100%;max-width:480px;background:#fff;border-radius:18px;padding:35px;box-shadow:0 25px 60px #0004}
+.login-logo,.brand-logo{background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold}
+.login-logo{width:70px;height:70px;border-radius:16px;font-size:30px;margin:0 auto 20px}
+.login-card h1{text-align:center;color:#111827;margin-bottom:8px}.subtitle{text-align:center;color:#6b7280;margin-bottom:28px}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-weight:600;margin-bottom:7px;color:#374151}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 13px;border:1px solid #d1d5db;border-radius:9px;outline:none;background:#fff}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#2563eb;box-shadow:0 0 0 3px #2563eb18}
+.login-btn,.btn{border:0;border-radius:8px;font-weight:600;transition:.2s}.login-btn{width:100%;padding:13px;background:#2563eb;color:#fff;font-size:16px}.login-btn:hover,.btn-primary:hover{background:#1d4ed8}
+.login-error{display:none;background:#fee2e2;color:#b91c1c;border:1px solid #fecaca;padding:11px;border-radius:8px;margin-bottom:16px;font-size:14px}
+.demo-box{margin-top:22px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:15px}.demo-box h4{margin-bottom:10px}
+.credential{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:13px;color:#4b5563;border-bottom:1px solid #e5e7eb}.credential:last-child{border-bottom:0}
+.app{display:none;min-height:100vh}.navbar{height:70px;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100}
+.brand{display:flex;align-items:center;gap:12px}.brand-logo{width:40px;height:40px;border-radius:9px}.brand h2{font-size:19px}.user-area{display:flex;align-items:center;gap:15px}.user-info{text-align:right}.user-info strong{display:block;font-size:14px}.user-info span{font-size:12px;color:#cbd5e1}
+.logout-btn{background:#ef4444;border:0;color:#fff;padding:9px 14px;border-radius:7px;font-weight:600}
+.container{max-width:1400px;margin:auto;padding:30px}.page-header{margin-bottom:25px}.page-header h1{font-size:28px;color:#111827;margin-bottom:6px}.page-header p{color:#6b7280}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:25px}.stat-card,.card{background:#fff;border:1px solid #e5e7eb;border-radius:13px;box-shadow:0 4px 12px #0f172a0a}
+.stat-card{padding:22px}.stat-card .label{color:#6b7280;font-size:13px;margin-bottom:8px}.stat-card .value{font-size:28px;font-weight:bold;color:#111827}.stat-card .small{font-size:12px;color:#6b7280;margin-top:6px}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.card{padding:22px;margin-bottom:22px}.card h2{font-size:18px;color:#111827;margin-bottom:17px}.card h3{font-size:15px;margin-bottom:12px;color:#374151}
+.btn{padding:10px 15px;font-size:13px}.btn-primary{background:#2563eb;color:#fff}.btn-success{background:#16a34a;color:#fff}.btn-danger{background:#dc2626;color:#fff}.btn-secondary{background:#64748b;color:#fff}.btn-warning{background:#d97706;color:#fff}.btn-light{background:#f1f5f9;color:#334155}
+.table-wrapper{width:100%;overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:650px}th{background:#f8fafc;color:#475569;text-align:left;padding:12px;font-size:12px;text-transform:uppercase;border-bottom:1px solid #e5e7eb}td{padding:12px;border-bottom:1px solid #eef2f7;font-size:13px;color:#374151}tr:hover td{background:#fafafa}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:bold}.badge-success{background:#dcfce7;color:#166534}.badge-danger{background:#fee2e2;color:#991b1b}.badge-warning{background:#fef3c7;color:#92400e}.badge-info{background:#dbeafe;color:#1e40af}.badge-gray{background:#e5e7eb;color:#374151}
+.profile{display:grid;grid-template-columns:90px 1fr;gap:20px;align-items:center}.avatar{width:85px;height:85px;background:#dbeafe;color:#1d4ed8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold}.profile h2{margin-bottom:6px}.profile p{color:#6b7280;margin-bottom:4px;font-size:14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.full-width{grid-column:1/-1}.empty{padding:25px;text-align:center;color:#9ca3af;font-size:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}.tab-btn{border:1px solid #e5e7eb;background:#fff;color:#475569;padding:10px 16px;border-radius:8px;font-weight:600}.tab-btn.active{background:#2563eb;border-color:#2563eb;color:#fff}.tab-content{display:none}.tab-content.active{display:block}
+.action-group{display:flex;gap:6px;flex-wrap:wrap}.toast{position:fixed;right:25px;bottom:25px;min-width:280px;padding:14px 18px;border-radius:9px;color:#fff;background:#111827;box-shadow:0 10px 30px #0003;display:none;z-index:1000;font-size:14px}.toast.success{background:#15803d}.toast.error{background:#dc2626}
+.report-area{background:#fff;padding:35px;border-radius:10px;border:1px solid #ddd}.report-header{text-align:center;border-bottom:2px solid #111827;padding-bottom:20px;margin-bottom:25px}.report-section{margin:25px 0}.report-section h3{border-bottom:1px solid #ddd;padding-bottom:7px;margin-bottom:12px}
+.inline-note{font-size:12px;color:#64748b;margin-top:8px}.danger-zone{border:1px solid #fecaca;background:#fff7f7;padding:15px;border-radius:10px;margin-top:18px}
+@media(max-width:1000px){.stats-grid{grid-template-columns:repeat(2,1fr)}.content-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.navbar{padding:0 15px}.brand h2,.user-info{display:none}.container{padding:18px}.stats-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.full-width{grid-column:auto}.profile{grid-template-columns:1fr;text-align:center}.avatar{margin:auto}}
+@media print{.navbar,.tabs,.btn,.logout-btn,.no-print{display:none!important}.container{max-width:100%;padding:0}.card{border:0;box-shadow:none}.report-area{border:0}}
+</style>
+</head>
+<body>
+
+<div id="loginPage" class="login-page">
+<div class="login-card">
+<div class="login-logo">HR</div>
+<h1>HR Management Portal</h1>
+<p class="subtitle">Employee & Administration Portal</p>
+<div id="loginError" class="login-error"></div>
+<form id="loginForm">
+<div class="form-group"><label>Username</label><input id="loginUsername" required autocomplete="username" placeholder="Enter username"></div>
+<div class="form-group"><label>Password</label><input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Enter password"></div>
+<div class="form-group"><label>Login As</label><select id="loginRole"><option value="employee">Employee</option><option value="admin">Administrator</option></select></div>
+<button class="login-btn">Sign In</button>
+</form>
+</div>
+</div>
+
+<div id="app" class="app">
+<nav class="navbar">
+<div class="brand"><div class="brand-logo">HR</div><h2>HR Management Portal</h2></div>
+<div class="user-area"><div class="user-info"><strong id="loggedUserName"></strong><span id="loggedUserRole"></span></div><button class="logout-btn" onclick="logout()">Logout</button></div>
+</nav>
+
+<main id="employeeDashboard" class="container" style="display:none">
+<div class="page-header"><h1>Employee Dashboard</h1><p>Manage your attendance, leave requests and assignments.</p></div>
+<div class="card"><div class="profile"><div id="employeeAvatar" class="avatar">A</div><div><h2 id="employeeProfileName"></h2><p>Employee ID: <strong id="employeeProfileId"></strong></p><p>Department: <strong id="employeeProfileDepartment"></strong></p><p>Email: <strong id="employeeProfileEmail"></strong></p><p>Role: <strong id="employeeProfileRole">Employee</strong></p></div></div></div>
+<div class="stats-grid">
+<div class="stat-card"><div class="label">Attendance Days</div><div id="empAttendanceCount" class="value">0</div><div class="small">Total attendance records</div></div>
+<div class="stat-card"><div class="label">Pending Leaves</div><div id="empPendingLeaveCount" class="value">0</div><div class="small">Waiting for approval</div></div>
+<div class="stat-card"><div class="label">Active Tasks</div><div id="empActiveTaskCount" class="value">0</div><div class="small">Assigned assignments</div></div>
+<div class="stat-card"><div class="label">Completed Tasks</div><div id="empCompletedTaskCount" class="value">0</div><div class="small">Completed assignments</div></div>
+</div>
+<div class="content-grid">
+<div class="card"><h2>Attendance</h2><p style="color:#64748b;font-size:13px;margin-bottom:15px">Mark your daily attendance.</p><div class="action-group"><button class="btn btn-success" onclick="checkIn()">Check In</button><button class="btn btn-danger" onclick="checkOut()">Check Out</button></div><div style="margin-top:18px"><h3>Today's Status</h3><div id="todayAttendanceStatus"></div></div></div>
+<div class="card"><h2>Request Leave</h2><form id="leaveForm"><div class="form-grid">
+<div class="form-group"><label>From Date</label><input type="date" id="leaveFrom" required></div>
+<div class="form-group"><label>To Date</label><input type="date" id="leaveTo" required></div>
+<div class="form-group"><label>Leave Type</label><select id="leaveType" required><option value="">Select Leave Type</option><option>Casual Leave</option><option>Sick Leave</option><option>Earned Leave</option><option>Personal Leave</option></select></div>
+<div class="form-group"><label>Reason</label><input id="leaveReason" required placeholder="Reason for leave"></div>
+</div><button class="btn btn-primary">Submit Leave Request</button></form></div>
+</div>
+<div class="card"><h2>My Assignments</h2><div class="table-wrapper"><table><thead><tr><th>Task</th><th>Description</th><th>Due Date</th><th>Priority</th><th>Status</th><th>Action</th></tr></thead><tbody id="employeeTaskTable"></tbody></table></div></div>
+<div class="card"><h2>My Leave History</h2><div class="table-wrapper"><table><thead><tr><th>From</th><th>To</th><th>Type</th><th>Reason</th><th>Status</th></tr></thead><tbody id="employeeLeaveTable"></tbody></table></div></div>
+<div class="card"><h2>Attendance History</h2><div class="table-wrapper"><table><thead><tr><th>Date</th><th>Check In</th><th>Check Out</th><th>Status</th></tr></thead><tbody id="employeeAttendanceTable"></tbody></table></div></div>
+</main>
+
+<main id="adminDashboard" class="container" style="display:none">
+<div class="page-header"><h1>Administrator Dashboard</h1><p>Manage employees, tasks, attendance, leave requests and reports.</p></div>
+<div class="stats-grid">
+<div class="stat-card"><div class="label">Total Employees</div><div id="adminTotalEmployees" class="value">0</div><div class="small">Registered employees</div></div>
+<div class="stat-card"><div class="label">Present Today</div><div id="adminPresentToday" class="value">0</div><div class="small">Employees checked in</div></div>
+<div class="stat-card"><div class="label">Pending Leaves</div><div id="adminPendingLeaves" class="value">0</div><div class="small">Approval required</div></div>
+<div class="stat-card"><div class="label">Total Tasks</div><div id="adminTotalTasks" class="value">0</div><div class="small">All assignments</div></div>
+</div>
+<div class="tabs">
+<button class="tab-btn active" onclick="showAdminTab('overview',this)">Overview</button>
+<button class="tab-btn" onclick="showAdminTab('employees',this)">Employee Database</button>
+<button class="tab-btn" onclick="showAdminTab('assignments',this)">Assign Tasks</button>
+<button class="tab-btn" onclick="showAdminTab('leaves',this)">Leave Approvals</button>
+<button class="tab-btn" onclick="showAdminTab('attendance',this)">Attendance</button>
+<button class="tab-btn" onclick="showAdminTab('reports',this)">Reports</button>
+</div>
+
+<section id="overviewTab" class="tab-content active"><div class="content-grid">
+<div class="card"><h2>Employees</h2><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Username</th><th>Status</th></tr></thead><tbody id="overviewEmployeeTable"></tbody></table></div></div>
+<div class="card"><h2>Recent Leave Requests</h2><div class="table-wrapper"><table><thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th>Status</th></tr></thead><tbody id="overviewLeaveTable"></tbody></table></div></div>
+</div></section>
+
+<section id="employeesTab" class="tab-content">
+<div class="card"><h2>Add New Employee</h2>
+<form id="employeeForm"><div class="form-grid">
+<div class="form-group"><label>Employee ID</label><input id="newEmpId" required placeholder="Example: EMP005"></div>
+<div class="form-group"><label>Employee Name</label><input id="newEmpName" required placeholder="Full name"></div>
+<div class="form-group"><label>Username</label><input id="newEmpUsername" required placeholder="Login username"></div>
+<div class="form-group"><label>Password</label><input id="newEmpPassword" type="password" required placeholder="Login password"></div>
+<div class="form-group"><label>Department</label><input id="newEmpDepartment" required placeholder="Department"></div>
+<div class="form-group"><label>Email</label><input id="newEmpEmail" type="email" required placeholder="employee@example.com"></div>
+<div class="form-group"><label>Role</label><select id="newEmpRole"><option>Employee</option><option>HR Executive</option><option>Manager</option></select></div>
+</div><button class="btn btn-primary">+ Add Employee</button></form>
+<p class="inline-note">You can add employees repeatedly. There is no hard-coded employee limit; records are stored in localStorage.</p>
+</div>
+<div class="card"><h2>Employee Database</h2><div class="table-wrapper"><table><thead><tr><th>ID</th><th>Name</th><th>Username</th><th>Department</th><th>Email</th><th>Role</th><th>Tasks</th><th>Leaves</th><th>Action</th></tr></thead><tbody id="adminEmployeeTable"></tbody></table></div></div>
+</section>
+
+<section id="assignmentsTab" class="tab-content">
+<div class="card"><h2>Assign New Task</h2><form id="taskForm"><div class="form-grid">
+<div class="form-group"><label>Employee</label><select id="taskEmployee" required></select></div>
+<div class="form-group"><label>Task Title</label><input id="taskTitle" required placeholder="Task title"></div>
+<div class="form-group full-width"><label>Description</label><textarea id="taskDescription" rows="3" required placeholder="Describe the assignment"></textarea></div>
+<div class="form-group"><label>Due Date</label><input type="date" id="taskDueDate" required></div>
+<div class="form-group"><label>Priority</label><select id="taskPriority"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></div>
+</div><button class="btn btn-primary">Assign Task</button></form></div>
+<div class="card"><h2>All Assignments</h2><div class="table-wrapper"><table><thead><tr><th>Employee</th><th>Task</th><th>Due Date</th><th>Priority</th><th>Status</th></tr></thead><tbody id="adminTaskTable"></tbody></table></div></div>
+</section>
+
+<section id="leavesTab" class="tab-content"><div class="card"><h2>Leave Requests</h2><div class="table-wrapper"><table><thead><tr><th>Employee</th><th>ID</th><th>Type</th><th>From</th><th>To</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody id="adminLeaveTable"></tbody></table></div></div></section>
+
+<section id="attendanceTab" class="tab-content"><div class="card"><h2>Employee Attendance</h2><div class="table-wrapper"><table><thead><tr><th>Employee</th><th>ID</th><th>Date</th><th>Check In</th><th>Check Out</th><th>Status</th></tr></thead><tbody id="adminAttendanceTable"></tbody></table></div></div></section>
+
+<section id="reportsTab" class="tab-content">
+<div class="card no-print"><h2>Generate Employee Report</h2><div class="form-grid"><div class="form-group"><label>Select Employee</label><select id="reportEmployee"></select></div><div class="form-group"><label>&nbsp;</label><button class="btn btn-primary" onclick="generateReport()">Generate Report</button></div></div></div>
+<div id="reportContainer"></div>
+</section>
+</main>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+const ADMIN_CREDENTIALS={username:"admin",password:"admin123"};
+const defaultEmployees=[
+{id:"EMP001",name:"Arun Kumar",username:"arun",password:"arun123",department:"Engineering",email:"arun@example.com",role:"Employee",attendance:[],leaves:[],tasks:[]},
+{id:"EMP002",name:"Priya Sharma",username:"priya",password:"priya123",department:"Human Resources",email:"priya@example.com",role:"Employee",attendance:[],leaves:[],tasks:[]},
+{id:"EMP003",name:"Rahul Raj",username:"rahul",password:"rahul123",department:"Finance",email:"rahul@example.com",role:"Employee",attendance:[],leaves:[],tasks:[]},
+{id:"EMP004",name:"Meena Devi",username:"meena",password:"meena123",department:"Marketing",email:"meena@example.com",role:"Employee",attendance:[],leaves:[],tasks:[]}
+];
+let employees=[],currentUser=null,currentRole=null;
+const KEY="hrPortalEmployeesV3";
+
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function loadData(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+  if(Array.isArray(saved)){
+   employees=saved.map(normalizeEmployee);
+   // Ensure original demo accounts still exist, without deleting newly-added employees.
+   for(const d of defaultEmployees) if(!employees.some(e=>e.id.toLowerCase()===d.id.toLowerCase())) employees.push(clone(d));
+  }else employees=clone(defaultEmployees);
+ }catch(e){employees=clone(defaultEmployees)}
+ saveData();
+}
+function normalizeEmployee(e){
+ return {...e,attendance:Array.isArray(e.attendance)?e.attendance:[],leaves:Array.isArray(e.leaves)?e.leaves:[],tasks:Array.isArray(e.tasks)?e.tasks:[],role:e.role||"Employee"};
+}
+function saveData(){localStorage.setItem(KEY,JSON.stringify(employees))}
+function $(id){return document.getElementById(id)}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function timeNow(){return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}
+function initials(name){return name.split(/\s+/).map(x=>x[0]).slice(0,2).join("").toUpperCase()}
+function currentEmployee(){return currentUser?employees.find(e=>e.id===currentUser.id):null}
+function statusBadge(s){
+ const c=s==="Approved"||s==="Completed"||s==="Present"?"success":s==="Rejected"?"danger":s==="Pending"?"warning":"info";
+ return `<span class="badge badge-${c}">${esc(s)}</span>`
+}
+function priorityBadge(p){
+ const c=p==="Critical"||p==="High"?"danger":p==="Medium"?"warning":"info";
+ return `<span class="badge badge-${c}">${esc(p)}</span>`
+}
+function toast(msg,type="success"){const t=$("toast");t.textContent=msg;t.className=`toast ${type}`;t.style.display="block";clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.style.display="none",2800)}
+function setDates(){const t=today();["leaveFrom","leaveTo","taskDueDate"].forEach(id=>{if($(id))$(id).min=t})}
+
+document.addEventListener("DOMContentLoaded",()=>{
+ loadData();setDates();
+ $("loginForm").addEventListener("submit",login);
+ $("leaveForm").addEventListener("submit",submitLeave);
+ $("taskForm").addEventListener("submit",assignTask);
+ $("employeeForm").addEventListener("submit",addEmployee);
+});
+
+function login(ev){
+ ev.preventDefault();const u=$("loginUsername").value.trim(),p=$("loginPassword").value,r=$("loginRole").value;
+ if(r==="admin"&&u===ADMIN_CREDENTIALS.username&&p===ADMIN_CREDENTIALS.password){
+  currentRole="admin";currentUser={id:"ADMIN",name:"Administrator",username:"admin"};openApp();showAdmin();return;
+ }
+ if(r==="employee"){
+  const e=employees.find(x=>x.username.toLowerCase()===u.toLowerCase()&&x.password===p);
+  if(e){currentRole="employee";currentUser={id:e.id,name:e.name,username:e.username};openApp();showEmployee(e);return}
+ }
+ $("loginError").textContent=`Invalid ${r==="admin"?"administrator":"employee"} username or password.`;$("loginError").style.display="block";
+}
+function openApp(){$("loginPage").style.display="none";$("app").style.display="block"}
+function logout(){currentUser=null;currentRole=null;$("app").style.display="none";$("loginPage").style.display="flex";$("loginForm").reset();$("loginError").style.display="none"}
+function showEmployee(e){
+ $("employeeDashboard").style.display="block";$("adminDashboard").style.display="none";
+ $("loggedUserName").textContent=e.name;$("loggedUserRole").textContent=`${e.id} • ${e.department}`;
+ $("employeeProfileName").textContent=e.name;$("employeeProfileId").textContent=e.id;$("employeeProfileDepartment").textContent=e.department;$("employeeProfileEmail").textContent=e.email;$("employeeProfileRole").textContent=e.role;$("employeeAvatar").textContent=initials(e.name);
+ renderEmployee(e);
+}
+function renderEmployee(e){renderEmpStats(e);renderEmpTasks(e);renderEmpLeaves(e);renderEmpAttendance(e);renderToday(e)}
+function renderEmpStats(e){
+ $("empAttendanceCount").textContent=e.attendance.length;
+ $("empPendingLeaveCount").textContent=e.leaves.filter(x=>x.status==="Pending").length;
+ $("empActiveTaskCount").textContent=e.tasks.filter(x=>x.status!=="Completed").length;
+ $("empCompletedTaskCount").textContent=e.tasks.filter(x=>x.status==="Completed").length;
+}
+function renderEmpTasks(e){
+ $("employeeTaskTable").innerHTML=e.tasks.length?e.tasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${esc(t.description)}</td><td>${esc(t.dueDate)}</td><td>${priorityBadge(t.priority)}</td><td>${statusBadge(t.status)}</td><td>${t.status!=="Completed"?`<button class="btn btn-success" onclick="completeTask('${esc(t.id)}')">Complete</button>`:`<span class="badge badge-success">Completed</span>`}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">No assignments have been assigned to you.</td></tr>`;
+}
+function renderEmpLeaves(e){
+ $("employeeLeaveTable").innerHTML=e.leaves.length?e.leaves.map(l=>`<tr><td>${esc(l.from)}</td><td>${esc(l.to)}</td><td>${esc(l.type)}</td><td>${esc(l.reason)}</td><td>${statusBadge(l.status)}</td></tr>`).join(""):`<tr><td colspan="5" class="empty">No leave requests found.</td></tr>`;
+}
+function renderEmpAttendance(e){
+ $("employeeAttendanceTable").innerHTML=e.attendance.length?e.attendance.map(a=>`<tr><td>${esc(a.date)}</td><td>${esc(a.checkIn||"-")}</td><td>${esc(a.checkOut||"-")}</td><td>${statusBadge(a.status)}</td></tr>`).join(""):`<tr><td colspan="4" class="empty">No attendance records found.</td></tr>`;
+}
+function renderToday(e){
+ const a=e.attendance.find(x=>x.date===today());
+ $("todayAttendanceStatus").innerHTML=!a?`<span class="badge badge-gray">Not Checked In</span>`:a.checkIn&&!a.checkOut?`<span class="badge badge-success">Checked In at ${esc(a.checkIn)}</span>`:`<span class="badge badge-info">${esc(a.checkIn)} - ${esc(a.checkOut)}</span>`;
+}
+function checkIn(){
+ const e=currentEmployee();if(!e)return;let a=e.attendance.find(x=>x.date===today());
+ if(a?.checkIn)return toast("You have already checked in today.","error");
+ if(!a){a={date:today(),checkIn:timeNow(),checkOut:"",status:"Present"};e.attendance.unshift(a)}else{a.checkIn=timeNow();a.status="Present"}
+ saveData();renderEmployee(e);refreshAdmin();toast("Attendance check-in recorded successfully.");
+}
+function checkOut(){
+ const e=currentEmployee();if(!e)return;const a=e.attendance.find(x=>x.date===today());
+ if(!a?.checkIn)return toast("Please check in before checking out.","error");
+ if(a.checkOut)return toast("You have already checked out today.","error");
+ a.checkOut=timeNow();a.status="Completed";saveData();renderEmployee(e);refreshAdmin();toast("Check-out recorded successfully.");
+}
+function submitLeave(ev){
+ ev.preventDefault();const e=currentEmployee();if(!e)return;const from=$("leaveFrom").value,to=$("leaveTo").value;
+ if(to<from)return toast("To Date cannot be before From Date.","error");
+ e.leaves.unshift({id:"LV"+Date.now(),from,to,type:$("leaveType").value,reason:$("leaveReason").value.trim(),status:"Pending",submittedAt:new Date().toLocaleString()});
+ saveData();$("leaveForm").reset();setDates();renderEmployee(e);refreshAdmin();toast("Leave request submitted successfully.");
+}
+function completeTask(id){
+ const e=currentEmployee(),t=e?.tasks.find(x=>x.id===id);if(!t)return;t.status="Completed";t.completedAt=new Date().toLocaleString();saveData();renderEmployee(e);refreshAdmin();toast("Task marked as completed.");
+}
+
+function showAdmin(){ $("employeeDashboard").style.display="none";$("adminDashboard").style.display="block";$("loggedUserName").textContent="Administrator";$("loggedUserRole").textContent="Admin";refreshAdmin();showAdminTab("overview",document.querySelector(".tab-btn"))}
+function showAdminTab(name,btn){
+ document.querySelectorAll(".tab-content").forEach(x=>x.classList.remove("active"));$(name+"Tab").classList.add("active");
+ document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");
+ refreshAdmin();
+}
+function refreshAdmin(){
+ if(currentRole!=="admin")return;
+ $("adminTotalEmployees").textContent=employees.length;
+ $("adminPresentToday").textContent=employees.filter(e=>e.attendance.some(a=>a.date===today()&&a.checkIn)).length;
+ $("adminPendingLeaves").textContent=employees.reduce((n,e)=>n+e.leaves.filter(l=>l.status==="Pending").length,0);
+ $("adminTotalTasks").textContent=employees.reduce((n,e)=>n+e.tasks.length,0);
+ renderOverview();renderEmployeeDatabase();renderEmployeeOptions();renderAdminTasks();renderAdminLeaves();renderAdminAttendance();
+}
+function renderOverview(){
+ $("overviewEmployeeTable").innerHTML=employees.map(e=>`<tr><td>${esc(e.id)}</td><td>${esc(e.name)}</td><td>${esc(e.department)}</td><td>${esc(e.username)}</td><td><span class="badge badge-success">Active</span></td></tr>`).join("");
+ const all=employees.flatMap(e=>e.leaves.map(l=>({...l,employee:e}))).sort((a,b)=>b.id.localeCompare(a.id)).slice(0,10);
+ $("overviewLeaveTable").innerHTML=all.length?all.map(x=>`<tr><td>${esc(x.employee.name)}</td><td>${esc(x.type)}</td><td>${esc(x.from)} to ${esc(x.to)}</td><td>${statusBadge(x.status)}</td></tr>`).join(""):`<tr><td colspan="4" class="empty">No leave requests found.</td></tr>`;
+}
+function renderEmployeeDatabase(){
+ $("adminEmployeeTable").innerHTML=employees.map(e=>`<tr><td>${esc(e.id)}</td><td>${esc(e.name)}</td><td>${esc(e.username)}</td><td>${esc(e.department)}</td><td>${esc(e.email)}</td><td>${esc(e.role)}</td><td>${e.tasks.length}</td><td>${e.leaves.length}</td><td><button class="btn btn-danger" onclick="deleteEmployee('${esc(e.id)}')">Delete</button></td></tr>`).join("");
+}
+function renderEmployeeOptions(){
+ const opts=employees.map(e=>`<option value="${esc(e.id)}">${esc(e.id)} - ${esc(e.name)}</option>`).join("");
+ $("taskEmployee").innerHTML=opts||`<option value="">No employees</option>`;
+ $("reportEmployee").innerHTML=opts||`<option value="">No employees</option>`;
+}
+function addEmployee(ev){
+ ev.preventDefault();
+ const id=$("newEmpId").value.trim().toUpperCase(),name=$("newEmpName").value.trim(),username=$("newEmpUsername").value.trim(),password=$("newEmpPassword").value,department=$("newEmpDepartment").value.trim(),email=$("newEmpEmail").value.trim(),role=$("newEmpRole").value;
+ if(!/^EMP[0-9A-Z_-]+$/i.test(id))return toast("Employee ID should start with EMP, for example EMP005.","error");
+ if(employees.some(e=>e.id.toLowerCase()===id.toLowerCase()))return toast("Employee ID already exists.","error");
+ if(employees.some(e=>e.username.toLowerCase()===username.toLowerCase()))return toast("Username already exists. Choose another username.","error");
+ if(password.length<4)return toast("Password must contain at least 4 characters.","error");
+ employees.push({id,name,username,password,department,email,role,attendance:[],leaves:[],tasks:[]});
+ saveData();ev.target.reset();refreshAdmin();toast(`${name} added successfully. They can now log in with the new credentials.`);
+}
+function deleteEmployee(id){
+ const e=employees.find(x=>x.id===id);if(!e)return;
+ if(!confirm(`Delete ${e.name} (${e.id}) and all of their attendance, leave and task records?`))return;
+ employees=employees.filter(x=>x.id!==id);saveData();refreshAdmin();toast(`${e.name} deleted successfully.`);
+}
+function assignTask(ev){
+ ev.preventDefault();const e=employees.find(x=>x.id===$("taskEmployee").value);if(!e)return toast("Please select an employee.","error");
+ e.tasks.unshift({id:"TS"+Date.now()+Math.random().toString(36).slice(2,7),title:$("taskTitle").value.trim(),description:$("taskDescription").value.trim(),dueDate:$("taskDueDate").value,priority:$("taskPriority").value,status:"Assigned",createdAt:new Date().toLocaleString()});
+ saveData();ev.target.reset();setDates();refreshAdmin();toast(`Task assigned to ${e.name}.`);
+}
+function renderAdminTasks(){
+ const all=employees.flatMap(e=>e.tasks.map(t=>({...t,employee:e})));
+ $("adminTaskTable").innerHTML=all.length?all.map(x=>`<tr><td>${esc(x.employee.name)}</td><td>${esc(x.title)}</td><td>${esc(x.dueDate)}</td><td>${priorityBadge(x.priority)}</td><td>${statusBadge(x.status)}</td></tr>`).join(""):`<tr><td colspan="5" class="empty">No assignments found.</td></tr>`;
+}
+function renderAdminLeaves(){
+ const all=employees.flatMap(e=>e.leaves.map(l=>({...l,employee:e})));
+ $("adminLeaveTable").innerHTML=all.length?all.map(x=>`<tr><td>${esc(x.employee.name)}</td><td>${esc(x.employee.id)}</td><td>${esc(x.type)}</td><td>${esc(x.from)}</td><td>${esc(x.to)}</td><td>${esc(x.reason)}</td><td>${statusBadge(x.status)}</td><td>${x.status==="Pending"?`<button class="btn btn-success" onclick="updateLeave('${esc(x.employee.id)}','${esc(x.id)}','Approved')">Approve</button> <button class="btn btn-danger" onclick="updateLeave('${esc(x.employee.id)}','${esc(x.id)}','Rejected')">Reject</button>`:"—"}</td></tr>`).join(""):`<tr><td colspan="8" class="empty">No leave requests found.</td></tr>`;
+}
+function updateLeave(empId,leaveId,status){
+ const e=employees.find(x=>x.id===empId),l=e?.leaves.find(x=>x.id===leaveId);if(!l)return;l.status=status;l.reviewedAt=new Date().toLocaleString();saveData();refreshAdmin();toast(`Leave request ${status.toLowerCase()}.`);
+}
+function renderAdminAttendance(){
+ const all=employees.flatMap(e=>e.attendance.map(a=>({...a,employee:e}))).sort((a,b)=>b.date.localeCompare(a.date));
+ $("adminAttendanceTable").innerHTML=all.length?all.map(x=>`<tr><td>${esc(x.employee.name)}</td><td>${esc(x.employee.id)}</td><td>${esc(x.date)}</td><td>${esc(x.checkIn||"-")}</td><td>${esc(x.checkOut||"-")}</td><td>${statusBadge(x.status)}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">No attendance records found.</td></tr>`;
+}
+function generateReport(){
+ const e=employees.find(x=>x.id===$("reportEmployee").value);if(!e)return;
+ const pending=e.leaves.filter(x=>x.status==="Pending").length,approved=e.leaves.filter(x=>x.status==="Approved").length,rejected=e.leaves.filter(x=>x.status==="Rejected").length;
+ $("reportContainer").innerHTML=`<div class="report-area">
+ <div class="report-header"><h1>Employee HR Report</h1><p>Generated: ${esc(new Date().toLocaleString())}</p></div>
+ <div class="report-section"><h3>Employee Information</h3><p><strong>ID:</strong> ${esc(e.id)}</p><p><strong>Name:</strong> ${esc(e.name)}</p><p><strong>Username:</strong> ${esc(e.username)}</p><p><strong>Department:</strong> ${esc(e.department)}</p><p><strong>Email:</strong> ${esc(e.email)}</p><p><strong>Role:</strong> ${esc(e.role)}</p></div>
+ <div class="report-section"><h3>Summary</h3><p>Attendance records: <strong>${e.attendance.length}</strong> | Leaves: <strong>${e.leaves.length}</strong> | Pending: <strong>${pending}</strong> | Approved: <strong>${approved}</strong> | Rejected: <strong>${rejected}</strong> | Tasks: <strong>${e.tasks.length}</strong> | Completed tasks: <strong>${e.tasks.filter(x=>x.status==="Completed").length}</strong></p></div>
+ <div class="report-section"><h3>Attendance History</h3>${reportTable(["Date","Check In","Check Out","Status"],e.attendance.map(a=>[a.date,a.checkIn||"-",a.checkOut||"-",a.status]))}</div>
+ <div class="report-section"><h3>Leave History</h3>${reportTable(["From","To","Type","Reason","Status"],e.leaves.map(l=>[l.from,l.to,l.type,l.reason,l.status]))}</div>
+ <div class="report-section"><h3>Assignment History</h3>${reportTable(["Task","Description","Due Date","Priority","Status"],e.tasks.map(t=>[t.title,t.description,t.dueDate,t.priority,t.status]))}</div>
+ <div class="action-group no-print"><button class="btn btn-primary" onclick="window.print()">Print / Save as PDF</button></div>
+ </div>`;
+}
+function reportTable(headers,rows){
+ if(!rows.length)return `<p>No records found.</p>`;
+ return `<div class="table-wrapper"><table><thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+</script>
+</body>
+</html>
